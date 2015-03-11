@@ -8,7 +8,8 @@ Still missing:
 
 1. No 'going alone'
 2. Common house rules, 'farmer's hand' or 'stick the dealer'
-3. the server and websocket parts
+3. We already won the trick speed up button that short cuts to scoring.
+4. The server and websocket parts
 
 Not going to add:
 

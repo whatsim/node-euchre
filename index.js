@@ -1,5 +1,3 @@
-var gameState
-
 var game = (function(){
 	var numPlayers = 4,
 	dealIndex = 0,
@@ -92,8 +90,8 @@ var game = (function(){
 				playIndex = (playIndex + 1) % numPlayers
 			}
 		},
-		dealerDiscard : function(){
-			hands[dealIndex].shift()
+		dealerDiscard : function(indexToDiscard){
+			playDeck.unshift(hands[dealIndex].splice(indexToDiscard,1)[0])
 			stage = 6
 		},
 		order : function(suit){
@@ -196,39 +194,17 @@ var game = (function(){
 	return actions
 })()
 
-// var repl = require("repl");
-
-// var r = repl.start({
-//   prompt: "> ",
-// });
-// r.context.game = game
-
 game.start()
 
 while(!(game.getScore()[0] >= 10 || game.getScore()[1] >= 10)) {
-	game.step()
-	game.step()
-	game.step(true)
-	game.step()
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
-	game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
+	game.step() //shuffle
+	game.step()	//deal
+	game.step(true)	//call
+	// alternately you step through the calling process and 
+	// game.step(SuitString)
+	// on the next time around
+	game.step(0)	//dealer discard card index
+	//a trick worth of single plays
+	for(var i = 0; i < 20; i++) game.step({playerIndex:game.getIndexes().playIndex,cardIndex:0})
 }
 console.log("final",game.getScore())
