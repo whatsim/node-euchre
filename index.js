@@ -114,6 +114,7 @@ var game = (function(){
 			games[gameID].trick.push(games[gameID].hands[play.playerIndex].splice(play.cardIndex,1)[0])
 			
 			if(games[gameID].trick.length == 4){
+				//might split this all out into its own stage to allow for more interactivity at this point
 				var ranking = actions.generateRanking(gameID)
 				var winningIndex = 0;
 				var topCard = games[gameID].trick[0]
@@ -188,6 +189,9 @@ var game = (function(){
 		getScore : function(gameID){
 			return games[gameID].score
 		},
+		getTrick : function(gameID){
+			return games[gameID].trick
+		},
 		step : function(gameID,change){
 			actions[order[games[gameID].stage]](gameID,change)
 			return(games[gameID].stage)
@@ -197,19 +201,28 @@ var game = (function(){
 	return actions
 })()
 
-game.start(0) //first arguement of start and step is always the game ID
+// run some games
+var wins = [0,0]
+for(var gameID = 0; gameID < 100000; gameID++){
+	game.start(gameID) //first arguement of start and step is always the game ID, returns an int indicating the new game state
 
-while(!(game.getScore(0)[0] >= 10 || game.getScore(0)[1] >= 10)) {
-	game.step(0) //shuffle
-	game.step(0)	//deal
-	game.step(0,true)	//call
-	// alternately you step through the calling process and 
-	// game.step(0,SuitString)
-	// on the next time around
-	game.step(0,0)	//dealer discard card index
-	//a trick worth of single plays
-	for(var i = 0; i < 20; i++) {
-		game.step(0,{playerIndex:game.getIndexes(0).playIndex,cardIndex:0})
+	while(!(game.getScore(gameID)[0] >= 10 || game.getScore(gameID)[1] >= 10)) {
+		game.step(gameID) //shuffle
+		game.step(gameID)	//deal
+		game.step(gameID,true)	//call
+		// alternately you step through the calling process and 
+		// game.step(0,SuitString)
+		// on the next time around
+		game.step(gameID,0)	//dealer discard card index
+		//a trick worth of single plays
+		for(var i = 0; i < 20; i++) {
+			game.step(gameID,{playerIndex:game.getIndexes(gameID).playIndex,cardIndex:0})
+		}
 	}
+	var score = game.getScore(gameID)
+	console.log("final -",gameID,score)
+	if(score[0] > score[1]) wins[0] ++
+	else wins[1] ++
 }
-console.log("final",game.getScore(0))
+console.log(wins)
+
