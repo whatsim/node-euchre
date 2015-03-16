@@ -1,5 +1,7 @@
 A js euchre server for playing over websocket with friends and enemies.
 
+[What is Euchre?](http://en.wikipedia.org/wiki/Euchre)
+
 Going to start with server only.
 
 This is largely where it needs to be on the euchre representation side, with exceptions of a couple of behaviors this has a complete sense of the rules of euchre, and controls flow of play.
